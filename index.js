@@ -1,18 +1,32 @@
 const http = require('http')
 const fs = require('fs')
+const url = require('url')
 
 const myserver = http.createServer((req, res) => {
-    if (req.url === '/favicon.ico ') return res.end();
-    console.log('kanndu');
+    if (req.url === '/favicon.ico') return res.end();
+
     const message = `${Date.now()} : ${req.url} \n`;
+    const myUrl = url.parse(req.url, true)
+    console.log(myUrl);
+
+
+
     fs.appendFile("my.text", message, (err, data) => {
-        switch (req.url) {
+        switch (myUrl.pathname) {
             case '/': res.end('hello welcome to all ')
                 break
-            case '/about': res.end('i am youra')
+            case '/about':
+                const userna = myUrl.query.myname
+                res.end(`i am ${userna}`)
+ // http://localhost:3002/about?myname=Gopika&userid=1&search=dog
                 break
             case '/a': res.end('aaaro')
                 break
+            case '/search' :
+                const searchresult = myUrl.query.search_q //http://localhost:3002/search?search_q=malayalam+songs
+                res.end(`search result is `+ searchresult)//search result is malayalam songs
+                break
+
             default: res.end('error');
 
         }
@@ -22,34 +36,3 @@ const myserver = http.createServer((req, res) => {
 myserver.listen(3002, () => {
     console.log('server stated');
 })
-// const { log } = require('console')
-// const http = require('http')
-// const fs = require('fs')
-
-// const myserver = http.createServer((req, res) => {
-//     const log = `${Date.now()}:${req.url} req time...\n`
-//    fs.appendFile(
-//     "log.text",log,(err,data)=>{
-//         switch(req.url){
-//             case '/':
-//                  res.end('welcom to my server Homepage');
-//                  break
-//                  case '/about':
-//                  res.end('welcom to about');
-//                  break
-//                  default:
-//                  res.end('error');
-//         }
-
-// }
-//    );
-
-// });
-
-// myserver.listen(3001, () => {
-//     console.log('server started');
-// })
-
-// const os = require('os')
-// console.log(os.cpus().length);
-
