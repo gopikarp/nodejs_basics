@@ -4,28 +4,32 @@ const url = require('url')
 
 const myserver = http.createServer((req, res) => {
     if (req.url === '/favicon.ico') return res.end();
-
-    const message = `${Date.now()} : ${req.url} \n`;
+    const message = `${Date.now()} / ${req.method}: ${req.url} \n`;
     const myUrl = url.parse(req.url, true)
-    console.log(myUrl);
-
-
-
     fs.appendFile("my.text", message, (err, data) => {
         switch (myUrl.pathname) {
-            case '/': res.end('hello welcome to all ')
+            case '/': res.end('hello welcome to all  on homepage ')
                 break
             case '/about':
                 const userna = myUrl.query.myname
                 res.end(`i am ${userna}`)
- // http://localhost:3002/about?myname=Gopika&userid=1&search=dog
+                // http://localhost:3002/about?myname=Gopika&userid=1&search=dog
                 break
             case '/a': res.end('aaaro')
                 break
-            case '/search' :
+            case '/search':
                 const searchresult = myUrl.query.search_q //http://localhost:3002/search?search_q=malayalam+songs
-                res.end(`search result is `+ searchresult)//search result is malayalam songs
+                res.end(`search result is ` + searchresult)//search result is malayalam songs
                 break
+            case '/signup':
+                if (req.method === "GET") res.end('this is signup page')
+                else if (req.method === "POST") {
+                    res.end('Sucess')
+                }
+
+                break
+
+
 
             default: res.end('error');
 
